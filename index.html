@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IOT DASHBOARD - Layout Skeleton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #0d0d0b;
+    --off:     #111110;
+    --border:  #2a2a28;
+    --muted:   #3a3a38;
+    --mid:     #666660;
+    --light:   #e8e4dc;
+    --paper:   #f0ece4;
+    --red:     #ff3b00;
+    --red-dim: #cc2f00;
+    --green:   #00cc66;
+    --yellow:  #ffcc00;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--black);
+    font-family: 'Archivo', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none; opacity: .025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px;
+  }
+
+  /* --- SHARED STYLES --- */
+  .section-head {
+    background: var(--black); color: var(--paper);
+    padding: 14px 40px;
+    display: flex; align-items: center; gap: 20px;
+    border-bottom: 3px solid var(--red);
+  }
+  .section-head .sh-num { font-family: 'Share Tech Mono'; font-size: 31px; color: var(--red); }
+  .section-head h2 { font-family: 'Archivo Black'; font-size: 20px; letter-spacing: 6px; text-transform: uppercase; }
+  .section-head .sh-line { flex: 1; height: 1px; background: var(--border); }
+  .section-head .sh-tag { font-family: 'Share Tech Mono'; font-size: 10px; color: var(--mid); letter-spacing: 2px; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* --- MAIN BODY LAYOUT --- */
+  .stat-panel {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 4px solid var(--black);
+  }
+  
+  .hero-right {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .stat-block {
+    padding: 31px 25px;
+    border-bottom: 2px solid var(--border);
+    position: relative;
+    transition: background .15s;
+  }
+  .stat-block:hover { background: #161614; }
+  .stat-block:last-child { border-bottom: none; }
+
+  .stat-label {
+    font-family: 'Share Tech Mono'; font-size: 25px; letter-spacing: 2px;
+    color: var(--mid); margin-bottom: 10px; text-transform: uppercase;
+  }
+  .stat-value {
+    font-family: 'Archivo Black'; font-size: 45px; line-height: 1;
+    color: var(--red);
+  }
+  .stat-unit { font-size: 22px; color: var(--muted); font-family: 'Archivo'; font-weight: 300; }
+  .stat-sub {
+    font-family: 'Share Tech Mono'; font-size: 11px; color: #555;
+    margin-top: 10px; letter-spacing: 1px;
+  }
+  .stat-bar { height: 3px; background: var(--border); margin-top: 16px; }
+  .stat-bar-fill {
+    height: 100%; background: var(--red);
+    box-shadow: 0 0 6px var(--red);
+    transition: width 1.2s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  /* --- WIDGET CONTAINER (PLACEHOLDER) --- */
+  .hero-widgets {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 32px 28px;
+    border-left: 2px solid var(--border);
+    min-width: 220px;
+  }
+
+  /* --- HARDWARE STACK LAYOUT --- */
+  #products { background: var(--paper); }
+
+  .products-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 4px solid var(--black);
+  }
+  @media (max-width: 900px) { .products-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .products-grid { grid-template-columns: 1fr; } }
+
+  .product-card {
+    padding: 36px 32px;
+    border-right: 2px solid var(--black);
+    position: relative; overflow: hidden;
+    transition: background .15s; cursor: pointer;
+  }
+  .product-card:last-child { border-right: none; }
+  .product-card:hover { background: var(--black); }
+  .product-card:hover .pc-num { color: var(--red); }
+  .product-card:hover .pc-name,
+  .product-card:hover .pc-desc { color: var(--paper); }
+  .product-card:hover .pc-tag { color: var(--mid); }
+  .product-card:hover .pc-bar-fill { background: var(--red); }
+
+  .pc-num {
+    font-family: 'Archivo Black'; font-size: 80px; line-height: 1;
+    color: #ddd8d0; transition: color .15s; margin-bottom: 8px;
+  }
+  .pc-name {
+    font-family: 'Archivo Black'; font-size: 20px;
+    letter-spacing: -0.5px; margin-bottom: 12px; transition: color .15s;
+  }
+  .pc-desc { font-size: 13px; color: #666; line-height: 1.7; transition: color .15s; }
+  .pc-tag {
+    font-family: 'Share Tech Mono'; font-size: 10px; color: var(--mid);
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 20px; transition: color .15s;
+  }
+  .pc-bar { height: 2px; background: #ddd8d0; margin-top: 8px; }
+  .pc-bar-fill { height: 100%; background: var(--black); transition: background .15s; }
+</style>
+</head>
+<body>
+
+  <div id="header-container">
+      </div>
+
+  <section id="stats">
+    <div class="stat-panel">
+      
+      <div class="hero-right">
+        <div class="stat-block" id="stat0">
+          <div class="stat-label">LOADING...</div>
+          <div class="stat-value">--<span class="stat-unit"></span></div>
+          <div class="stat-sub">// STANDBY</div>
+          <div class="stat-bar"><div class="stat-bar-fill" data-w="0" style="width: 10%;"></div></div>
+        </div>
+        <div class="stat-block" id="stat1">
+          <div class="stat-label">LOADING...</div>
+          <div class="stat-value">--<span class="stat-unit"></span></div>
+          <div class="stat-sub">// STANDBY</div>
+          <div class="stat-bar"><div class="stat-bar-fill" data-w="0" style="width: 10%;"></div></div>
+        </div>
+        <div class="stat-block" id="stat2">
+          <div class="stat-label">LOADING...</div>
+          <div class="stat-value">--<span class="stat-unit"></span></div>
+          <div class="stat-sub">// STANDBY</div>
+          <div class="stat-bar"><div class="stat-bar-fill" data-w="0" style="width: 10%;"></div></div>
+        </div>
+      </div>
+
+      <div class="hero-widgets" id="widget-container">
+        </div>
+      
+    </div>
+  </section>
+
+  <section id="products">
+    <div class="section-head">
+      <span class="sh-num">02 //</span>
+      <h2>HARDWARE STACK</h2>
+      <div class="sh-line"></div>
+      <span class="sh-tag">CERTIFIED IP68 · MIL-STD-810</span>
+    </div>
+    <div class="products-grid">
+      <div class="product-card reveal visible">
+        <div class="pc-num">01</div>
+        <div class="pc-name">ESP32-C3-OLED</div>
+        <div class="pc-desc">Compact RISC-V IoT development board featuring built-in Wi-Fi, BLE. Onboard monochrome OLED display, and digital/analog IO.</div>
+        <div class="pc-tag">WIFI · BLE · RISC-V</div>
+        <div class="pc-bar"><div class="pc-bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="product-card reveal visible">
+        <div class="pc-num">02</div>
+        <div class="pc-name">BMP180</div>
+        <div class="pc-desc">Digital pressure sensor with high accuracy and heat detection. For weather monitoring and altitude measurement.</div>
+        <div class="pc-tag">PRESSURE · TEMP · ALTITUDE</div>
+        <div class="pc-bar"><div class="pc-bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="product-card reveal visible">
+        <div class="pc-num">03</div>
+        <div class="pc-name">MQ-135</div>
+        <div class="pc-desc">Air quality sensor for detecting NH3, CO, NOx, and other pollutants.</div>
+        <div class="pc-tag">AIR QUALITY · NH3 · CO · NOx</div>
+        <div class="pc-bar"><div class="pc-bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="product-card reveal visible">
+        <div class="pc-num">04</div>
+        <div class="pc-name">TSL-2561</div>
+        <div class="pc-desc">Light sensor with high sensitivity and wide dynamic range. For ambient light monitoring.</div>
+        <div class="pc-tag">LIGHT · IR · FULL-SPECTRUM</div>
+        <div class="pc-bar"><div class="pc-bar-fill" style="width:95%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+      // API Fetching, Math Logic, and DOM Updates will be integrated here
+  </script>
+</body>
+</html>
