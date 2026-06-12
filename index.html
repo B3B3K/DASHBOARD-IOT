@@ -149,11 +149,136 @@
   }
   .pc-bar { height: 2px; background: #ddd8d0; margin-top: 8px; }
   .pc-bar-fill { height: 100%; background: var(--black); transition: background .15s; }
+.marquee-section {
+    background: var(--black); overflow: hidden;
+    padding: 22px 0; border-bottom: 4px solid var(--black);
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marquee 18s linear infinite;
+    width: max-content;
+  }
+  @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+  .mq-item {
+    font-family: 'Archivo Black'; font-size: 40px; line-height: 1;
+    color: var(--border); text-transform: uppercase; letter-spacing: -2px;
+    padding: 0 35px; white-space: nowrap;
+  }
+  .mq-item.accent { color: var(--red); }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .axis-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+  }
+  .axis-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .axis-title {
+    font-family: 'Share Tech Mono';
+    font-size: 10px;
+    color: var(--mid);
+    letter-spacing: 2px;
+  }
+
+  .axis-circle-x, .axis-circle-y {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+
+  .axis-circle-x::before, .axis-circle-y::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 35px;
+    background: var(--red);
+    left: 50%;
+    top: 5px;
+    transform-origin: 50% 100%;
+    border-radius: 2px;
+    box-shadow: 0 0 5px var(--red);
+  }
+
+  .axis-circle-x {
+    background: conic-gradient(
+      from 0deg,
+      #4bd6a5 0deg 45deg,
+      #31a87c 45deg 90deg,
+      #555550 90deg 135deg,
+      #3a3a38 135deg 180deg,
+      #ff8e8e 180deg 225deg,
+      #db5b5b 225deg 270deg,
+      #555550 270deg 315deg,
+      #3a3a38 315deg 360deg
+    );
+  }
+
+  .axis-circle-y {
+    background: conic-gradient(
+      from 0deg,
+      #4bd6a5 0deg 45deg,
+      #31a87c 45deg 90deg,
+      #555550 90deg 135deg,
+      #3a3a38 135deg 180deg,
+      #ff8e8e 180deg 225deg,
+      #db5b5b 225deg 270deg,
+      #555550 270deg 315deg,
+      #3a3a38 315deg 360deg
+    );
+  }
+
+  .axis-label {
+    font-family: 'Archivo Black';
+    font-size: 14px;
+    color: var(--light);
+    background: var(--black);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .wlevel-ring {
+    position: relative;
+    width: 180px;
+    height: 180px;
+  }
+  .wlevel-num {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    font-weight: 600;
+    font-family: 'Share Tech Mono', monospace;
+    pointer-events: none;
+  }
+  
 </style>
 </head>
 <body>
 
   <div id="header-container">
+     <div class="section-head">
+     <span class="sh-num">01 //</span>
+     <h2>IOT DASHBOARD</h2>
+     <div class="sh-line"></div>
+      <span class="sh-tag">SLA-BACKED · REAL-TIME</span>
+        </div>
+         <div class="marquee-section">
+     <div class="marquee-track" id="marqueeTrack"></div>
+     </div>
       </div>
 
   <section id="stats">
@@ -181,9 +306,64 @@
       </div>
 
       <div class="hero-widgets" id="widget-container">
+        <div class="hero-widgets">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--mid);letter-spacing:3px;">LIGHT / LUX</div>
+            <svg width="190" height="125" viewBox="0 0 300 200">
+             <defs>
+          <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#0051e6;stop-opacity:1"/>
+            <stop offset="50%" style="stop-color:#ffa200;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#ff3b00;stop-opacity:1"/>
+          </linearGradient>
+         </defs>
+         <path d="M 20 160 A 130 130 0 0 1 280 160"
+              fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="25" stroke-linecap="round"/>
+         <path id="filledArc" fill="none" stroke="url(#gaugeGradient)" stroke-width="25" stroke-linecap="round"/>
+         <text id="ppmVal" x="150" y="155" text-anchor="middle" fill="#e8e4dc"
+              font-size="42" font-weight="bold" font-family="'Share Tech Mono',monospace">0</text>
+         <text x="150" y="182" text-anchor="middle" fill="#555" font-size="14"
+              font-family="'Share Tech Mono',monospace">LUX</text>
+            </svg>
+             </div>
+
+            <div style="width:80%;height:1px;background:var(--border);"></div>
+
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--mid);letter-spacing:3px;">GAS LEVEL</div>
+         <div class="wlevel-ring" style="width:140px;height:140px;">
+         <svg viewBox="0 0 140 140" width="140" height="140">
+           <defs>
+            <clipPath id="circleClip">
+              <circle cx="70" cy="70" r="58"/>
+            </clipPath>
+          </defs>
+          <circle cx="70" cy="70" r="62" fill="none" stroke="#2a2a28" stroke-width="8"/>
+          <rect id="waterRect" x="12" y="46" width="116" height="82"
+                fill="#1a3a5c" clip-path="url(#circleClip)" opacity="0.7"/>
+          <path id="wavePath" d=""
+                fill="#1e4a7a" clip-path="url(#circleClip)" opacity="0.9"/>
+          <circle cx="70" cy="70" r="62" fill="none" stroke="#333330" stroke-width="8"/>
+         </svg>
+          <div class="wlevel-num" id="wlevelNum" style="color:var(--light);font-size:26px;">6</div>
+         </div>
+            </div>
+              <div class="axis-container">
+      <div class="axis-widget">
+        <div class="axis-title">X AXIS</div>
+        <div id="circleX" class="axis-circle-x"></div>
+        <div id="labelX" class="axis-label">0.00</div>
+      </div>
+      <div class="axis-widget">
+        <div class="axis-title">Y AXIS</div>
+        <div id="circleY" class="axis-circle-y"></div>
+        <div id="labelY" class="axis-label">0.00</div>
+      </div>
+    </div>
+  </div>
+        </div>
         </div>
       
-    </div>
   </section>
 
   <section id="products">
@@ -227,6 +407,170 @@
 
   <script>
       // API Fetching, Math Logic, and DOM Updates will be integrated here
+(function() {
+      const r = 130, cx = 150, cy = 160;
+      const sa = Math.PI, ta = Math.PI;
+      window.updateGauge = function(p) {
+        p = Math.min(100, Math.max(0, p));
+        const pc = p / 100;
+        const ea = sa + ta * pc;
+        const sx = cx + r * Math.cos(sa);
+        const sy = cy + r * Math.sin(sa);
+        const ex = cx + r * Math.cos(ea);
+        const ey = cy + r * Math.sin(ea);
+        const filledArc = document.getElementById('filledArc');
+        if (filledArc) {
+          if (p > 0) {
+            filledArc.setAttribute('d',
+              `M ${sx} ${sy} A ${r} ${r} 0 0 1 ${ex} ${ey}`);
+          } else {
+            filledArc.setAttribute('d', '');
+          }
+        }
+      };
+      updateGauge(0);
+    })();
+
+    (function() {
+      const tp = 12, bt = 128, hh = bt - tp;
+      window.setWaterLevel = function(v) {
+        v = Math.max(0, Math.min(10, Number(v)));
+        const wt = bt - hh * (v / 10);
+        const wh = hh * (v / 10);
+        const waterRect = document.getElementById('waterRect');
+        const wavePath = document.getElementById('wavePath');
+        const wlevelNum = document.getElementById('wlevelNum');
+        if (waterRect) {
+          waterRect.setAttribute('y', wt);
+          waterRect.setAttribute('height', wh);
+        }
+        if (wavePath) {
+          wavePath.setAttribute('d',
+            `M12,${wt} Q35,${wt-8} 58,${wt} Q81,${wt+8} 104,${wt} Q127,${wt-8} 128,${wt}` +
+            ` L128,${wt+2} Q105,${wt+10} 82,${wt+2} Q59,${wt-6} 36,${wt+2} Q20,${wt+6} 12,${wt+2} Z`
+          );
+        }
+        if (wlevelNum) wlevelNum.textContent = Math.round(v);
+      };
+      setWaterLevel(6);
+    })();
+
+    const LIMITS = {
+      gas: { warn: 100, danger: 200 },
+      light: { warn: 500, danger: 800 },
+      pressure: { warn: 105000, danger: 108000 },
+      motion: { warn: 0.5, danger: 0.8 }
+    };
+
+    let marqueeReady = false;
+
+    function buildMarqueeHTML(txts, cols) {
+      const def = '#2a2a28';
+      let out = '';
+      txts.forEach((t, i) => {
+        const c = cols[i] !== undefined ? cols[i] : def;
+        out += `<span class="mq-item" style="color: ${c};">${t}</span>`;
+        out += `<span class="mq-item" style="color: #2a2a28;">■</span>`;
+      });
+      return out + out;
+    }
+
+    function updateMarquee(txts, cols) {
+      const track = document.getElementById('marqueeTrack');
+      if (!track) return;
+      if (!marqueeReady) {
+        track.innerHTML = buildMarqueeHTML(txts, cols);
+        marqueeReady = true;
+      } else {
+        const items = track.querySelectorAll('.mq-item');
+        const step = txts.length * 2;
+        items.forEach((it, idx) => {
+          const pos = idx % step;
+          if (pos % 2 === 0) {
+            const tidx = pos / 2;
+            if (cols[tidx]) it.style.color = cols[tidx];
+          }
+        });
+      }
+    }
+
+    function getWarnColor(v, t) {
+      const lm = LIMITS[t];
+      if (!lm) return '#e8e4dc';
+      if (v >= lm.danger) return '#ff3b00';
+      if (v >= lm.warn) return '#ffcc00';
+      return '#e8e4dc';
+    }
+
+    function updateAxisCircle(id, gValue) {
+      const circle = document.getElementById(`circle${id}`);
+      const label = document.getElementById(`label${id}`);
+      if (!circle || !label) return;
+      const maxAngle = 180;
+      const maxG = 2.0;
+      let angle = (gValue / maxG) * maxAngle;
+      angle = Math.min(maxAngle, Math.max(-maxAngle, angle));
+      circle.style.transform = `rotate(${angle}deg)`;
+      if (gValue > 0.3) {
+        circle.style.boxShadow = '0 0 15px rgba(75, 214, 165, 0.5)';
+      } else if (gValue < -0.3) {
+        circle.style.boxShadow = '0 0 15px rgba(255, 142, 142, 0.5)';
+      } else {
+        circle.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+      }
+      const sign = gValue > 0 ? '+' : '';
+      label.textContent = `${sign}${gValue.toFixed(2)}G`;
+      label.title = `${id}-axis: ${Math.abs(gValue).toFixed(2)}G @ ${Math.abs(angle).toFixed(0)}°`;
+    }
+
+    async function fetchData() {
+      try {
+        const res = await fetch('/api');
+        const d = await res.json();
+
+        const gas = d.mq135.ppm;
+        const lux = d.tsl2561.lux;
+        const pres = d.bmp180.pressure_pa;
+        const temp = d.bmp180.temperature_c;
+        const acc = d.mpu6050.accel_g;
+        const ax = acc.x, ay = acc.y, az = acc.z;
+        const amag = Math.sqrt(ax*ax + ay*ay + az*az);
+
+        updateAxisCircle('X', ax);
+        updateAxisCircle('Y', ay);
+
+        if (window.updateGauge) {
+          const pctLight = ((Math.min(lux, 1000) / 1000) * 100).toFixed(1);
+          window.updateGauge(parseFloat(pctLight));
+          const luxEl = document.getElementById('ppmVal');
+          if (luxEl) {
+            luxEl.textContent = lux;
+            const lc = getWarnColor(lux, 'light');
+            luxEl.setAttribute('fill', lc);
+          }
+        }
+        if (window.setWaterLevel) {
+          window.setWaterLevel(Math.min(10, (gas / 500) * 10));
+        }
+
+        const colPres = getWarnColor(pres, 'pressure');
+        const colTemp = getWarnColor(temp, 'temp') ?? '#e8e4dc';
+        const colMotion = getWarnColor(Math.abs(amag - 1.0), 'motion');
+
+        updateMarquee(['AIR', 'TEMP', 'MOTION'], [colPres, colTemp, colMotion]);
+
+      } catch (err) {
+        console.error('API Error:', err);
+        updateMarquee(['AIR', 'TEMP', 'MOTION'], ['#ff3b00', '#ff3b00', '#ff3b00']);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchData();
+      setInterval(fetchData, 60000);
+    });
+
+    
   </script>
 </body>
 </html>
